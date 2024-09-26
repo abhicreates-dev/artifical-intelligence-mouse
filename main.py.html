@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">cv2</span>
+<span class="s0">import </span><span class="s1">mediapipe </span><span class="s0">as </span><span class="s1">mp</span>
+<span class="s0">import </span><span class="s1">pyautogui</span>
+<span class="s1">cap </span><span class="s2">= </span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">VideoCapture</span><span class="s2">(</span><span class="s3">0</span><span class="s2">)</span>
+<span class="s1">hand_detector </span><span class="s2">= </span><span class="s1">mp</span><span class="s2">.</span><span class="s1">solutions</span><span class="s2">.</span><span class="s1">hands</span><span class="s2">.</span><span class="s1">Hands</span><span class="s2">()</span>
+<span class="s1">drawing_utils </span><span class="s2">= </span><span class="s1">mp</span><span class="s2">.</span><span class="s1">solutions</span><span class="s2">.</span><span class="s1">drawing_utils</span>
+<span class="s1">screen_width</span><span class="s2">, </span><span class="s1">screen_height </span><span class="s2">= </span><span class="s1">pyautogui</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()</span>
+<span class="s1">index_y </span><span class="s2">= </span><span class="s3">0</span>
+<span class="s0">while True</span><span class="s2">:</span>
+    <span class="s1">_</span><span class="s2">, </span><span class="s1">frame </span><span class="s2">= </span><span class="s1">cap</span><span class="s2">.</span><span class="s1">read</span><span class="s2">()</span>
+    <span class="s1">frame </span><span class="s2">= </span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">flip</span><span class="s2">(</span><span class="s1">frame</span><span class="s2">, </span><span class="s3">1</span><span class="s2">)</span>
+    <span class="s1">frame_height</span><span class="s2">, </span><span class="s1">frame_width</span><span class="s2">, </span><span class="s1">_ </span><span class="s2">= </span><span class="s1">frame</span><span class="s2">.</span><span class="s1">shape</span>
+    <span class="s1">rgb_frame </span><span class="s2">= </span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">cvtColor</span><span class="s2">(</span><span class="s1">frame</span><span class="s2">, </span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">COLOR_BGR2RGB</span><span class="s2">)</span>
+    <span class="s1">output </span><span class="s2">= </span><span class="s1">hand_detector</span><span class="s2">.</span><span class="s1">process</span><span class="s2">(</span><span class="s1">rgb_frame</span><span class="s2">)</span>
+    <span class="s1">hands </span><span class="s2">= </span><span class="s1">output</span><span class="s2">.</span><span class="s1">multi_hand_landmarks</span>
+    <span class="s0">if </span><span class="s1">hands</span><span class="s2">:</span>
+        <span class="s0">for </span><span class="s1">hand </span><span class="s0">in </span><span class="s1">hands</span><span class="s2">:</span>
+            <span class="s1">drawing_utils</span><span class="s2">.</span><span class="s1">draw_landmarks</span><span class="s2">(</span><span class="s1">frame</span><span class="s2">, </span><span class="s1">hand</span><span class="s2">)</span>
+            <span class="s1">landmarks </span><span class="s2">= </span><span class="s1">hand</span><span class="s2">.</span><span class="s1">landmark</span>
+            <span class="s0">for </span><span class="s1">id</span><span class="s2">, </span><span class="s1">landmark </span><span class="s0">in </span><span class="s1">enumerate</span><span class="s2">(</span><span class="s1">landmarks</span><span class="s2">):</span>
+                <span class="s1">x </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">landmark</span><span class="s2">.</span><span class="s1">x</span><span class="s2">*</span><span class="s1">frame_width</span><span class="s2">)</span>
+                <span class="s1">y </span><span class="s2">= </span><span class="s1">int</span><span class="s2">(</span><span class="s1">landmark</span><span class="s2">.</span><span class="s1">y</span><span class="s2">*</span><span class="s1">frame_height</span><span class="s2">)</span>
+
+                <span class="s0">if </span><span class="s1">id </span><span class="s2">== </span><span class="s3">8</span><span class="s2">:</span>
+                    <span class="s1">cv2</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">img</span><span class="s2">=</span><span class="s1">frame</span><span class="s2">, </span><span class="s1">center</span><span class="s2">=(</span><span class="s1">x</span><span class="s2">,</span><span class="s1">y</span><span class="s2">), </span><span class="s1">radius</span><span class="s2">=</span><span class="s3">10</span><span class="s2">, </span><span class="s1">color</span><span class="s2">=(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">255</span><span class="s2">))</span>
+                    <span class="s1">index_x </span><span class="s2">= </span><span class="s1">screen_width</span><span class="s2">/</span><span class="s1">frame_width</span><span class="s2">*</span><span class="s1">x</span>
+                    <span class="s1">index_y </span><span class="s2">= </span><span class="s1">screen_height</span><span class="s2">/</span><span class="s1">frame_height</span><span class="s2">*</span><span class="s1">y</span>
+                    <span class="s1">pyautogui</span><span class="s2">.</span><span class="s1">moveTo</span><span class="s2">(</span><span class="s1">index_x</span><span class="s2">, </span><span class="s1">index_y</span><span class="s2">)</span>
+                <span class="s0">if </span><span class="s1">id </span><span class="s2">== </span><span class="s3">4</span><span class="s2">:</span>
+                    <span class="s1">cv2</span><span class="s2">.</span><span class="s1">circle</span><span class="s2">(</span><span class="s1">img</span><span class="s2">=</span><span class="s1">frame</span><span class="s2">, </span><span class="s1">center</span><span class="s2">=(</span><span class="s1">x</span><span class="s2">,</span><span class="s1">y</span><span class="s2">), </span><span class="s1">radius</span><span class="s2">=</span><span class="s3">10</span><span class="s2">, </span><span class="s1">color</span><span class="s2">=(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">255</span><span class="s2">))</span>
+                    <span class="s1">thumb_x </span><span class="s2">= </span><span class="s1">screen_width</span><span class="s2">/</span><span class="s1">frame_width</span><span class="s2">*</span><span class="s1">x</span>
+                    <span class="s1">thumb_y </span><span class="s2">= </span><span class="s1">screen_height</span><span class="s2">/</span><span class="s1">frame_height</span><span class="s2">*</span><span class="s1">y</span>
+                    <span class="s1">print</span><span class="s2">(</span><span class="s4">'outside'</span><span class="s2">, </span><span class="s1">abs</span><span class="s2">(</span><span class="s1">index_y </span><span class="s2">- </span><span class="s1">thumb_y</span><span class="s2">))</span>
+                    <span class="s0">if </span><span class="s1">abs</span><span class="s2">(</span><span class="s1">index_y </span><span class="s2">- </span><span class="s1">thumb_y</span><span class="s2">) &lt; </span><span class="s3">50</span><span class="s2">:</span>
+                        <span class="s1">pyautogui</span><span class="s2">.</span><span class="s1">click</span><span class="s2">()</span>
+                        <span class="s1">pyautogui</span><span class="s2">.</span><span class="s1">click</span><span class="s2">(</span><span class="s3">1</span><span class="s2">)</span>
+
+
+
+    <span class="s1">cv2</span><span class="s2">.</span><span class="s1">imshow</span><span class="s2">(</span><span class="s4">'Virtual mouse'</span><span class="s2">, </span><span class="s1">frame</span><span class="s2">)</span>
+    <span class="s1">cv2</span><span class="s2">.</span><span class="s1">waitKey</span><span class="s2">(</span><span class="s3">1</span><span class="s2">)</span>
+</pre>
+</body>
+</html>
